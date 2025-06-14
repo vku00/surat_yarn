@@ -22,18 +22,21 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 4rem 1rem;
+        /* Adjusted padding for better mobile edge-to-edge look */
+        padding: 4rem 1.5rem; /* Increased horizontal padding slightly */
         text-align: center;
       }
       .section-title {
         font-weight: 900;
-        font-size: 3rem;
+        /* Fluid typography: base size for small screens, scales up smoothly */
+        font-size: calc(2.5rem + 1.5vw); 
         line-height: 1.1;
         margin-bottom: 1.5rem;
       }
       .section-subtitle {
         font-weight: 300;
-        font-size: 1.5rem;
+        /* Fluid typography: base size for small screens, scales up smoothly */
+        font-size: calc(1.2rem + 0.5vw); 
         margin-bottom: 2rem;
         max-width: 800px;
       }
@@ -55,12 +58,13 @@
         height: 300px; /* Default height */
         max-height: 450px; /* Max height to prevent excessive size */
       }
+      /* Media queries for larger screens to further refine fluid typography */
       @media (min-width: 768px) {
         .section-title {
-          font-size: 4.5rem;
+          font-size: calc(3.5rem + 2.5vw);
         }
         .section-subtitle {
-          font-size: 2rem;
+          font-size: calc(1.5rem + 0.7vw);
         }
         .chart-container {
           height: 380px;
@@ -69,6 +73,9 @@
       @media (min-width: 1024px) {
         .section-container {
           padding: 6rem 2rem;
+        }
+        .section-title {
+            font-size: calc(4rem + 3vw);
         }
         .chart-container {
           height: 400px;
@@ -97,6 +104,7 @@
         padding-left: 2.5rem;
         padding-right: 2.5rem;
       }
+      /* Ensuring even/odd items are properly aligned by default */
       .timeline-item:nth-child(even) {
         padding-left: 2.5rem;
         padding-right: 2.5rem;
@@ -139,6 +147,7 @@
         clear: both;
       }
 
+      /* Mobile-specific adjustments for timeline */
       @media (max-width: 767px) {
         .timeline-container::before {
           left: 12px;
