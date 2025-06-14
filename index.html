@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Growth Blueprint - Presentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .section-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 4rem 1rem;
+        text-align: center;
+      }
+      .section-title {
+        font-weight: 900;
+        font-size: 3rem;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+      }
+      .section-subtitle {
+        font-weight: 300;
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        max-width: 800px;
+      }
+      .card {
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+          0 4px 6px -2px rgb(0 0 0 / 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        height: 300px; /* Default height */
+        max-height: 450px; /* Max height to prevent excessive size */
+      }
+      @media (min-width: 768px) {
+        .section-title {
+          font-size: 4.5rem;
+        }
+        .section-subtitle {
+          font-size: 2rem;
+        }
+        .chart-container {
+          height: 380px;
+        }
+      }
+      @media (min-width: 1024px) {
+        .section-container {
+          padding: 6rem 2rem;
+        }
+        .chart-container {
+          height: 400px;
+        }
+      }
+
+      .timeline-container {
+        position: relative;
+        max-width: 900px;
+        margin: 0 auto;
+        padding-top: 2rem;
+      }
+      .timeline-container::before {
+        content: "";
+        position: absolute;
+        width: 4px;
+        background-color: #d1d5db; /* Gray-300 for the line */
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+      .timeline-item:nth-child(even) {
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+      .timeline-item:nth-child(odd) {
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+      .timeline-dot {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 4px solid white;
+        left: 50%;
+        top: 0.5rem;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+      .timeline-content {
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        padding: 1.5rem;
+        text-align: left;
+        width: calc(50% - 2rem);
+      }
+      .timeline-item:nth-child(odd) .timeline-content {
+        float: left;
+        margin-right: 2rem;
+      }
+      .timeline-item:nth-child(even) .timeline-content {
+        float: right;
+        margin-left: 2rem;
+      }
+      .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      @media (max-width: 767px) {
+        .timeline-container::before {
+          left: 12px;
+          transform: translateX(0);
+        }
+        .timeline-item {
+          padding-left: 3rem;
+          padding-right: 1rem;
+        }
+        .timeline-item:nth-child(odd) .timeline-content,
+        .timeline-item:nth-child(even) .timeline-content {
+          width: 100%;
+          float: none;
+          margin-left: 0;
+          margin-right: 0;
+        }
+        .timeline-dot {
+          left: 12px;
+          transform: translateX(-50%);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <!-- 
+        PRESENTATION PLAN & CONFIRMATION
+        Palette Selection: "Brilliant Blues & Oranges" inspired (#003f5c, #665191, #d45087, #ff7c43, #ffa600) for a vibrant, professional feel.
+        Structure: Each section acts as a "slide" for a single-page scrollable presentation.
+        
+        Visualization Choices & Justification:
+        1. Title Slide: HTML/CSS Text. Goal: Inform.
+        2. Executive Summary: HTML/CSS Text. Goal: Inform.
+        3. Target Audience: HTML/CSS Cards with Unicode Icons. Goal: Organize. Provides clear, visual separation of key market segments without needing complex graphics. CONFIRMS NO SVG.
+        4. Strategic Objectives: Donut Charts (Chart.js/Canvas) and Large Number. Goal: Inform. Ideal for representing percentage-based growth targets and specific lead numbers. USES CANVAS.
+        5. Monthly Content Engine: Bar Chart (Chart.js/Canvas). Goal: Compare. Effectively compares the quantities of different content types. USES CANVAS.
+        6. 6-Month Growth Roadmap: HTML/CSS Timeline. Goal: Organize/Process. Best method to clearly illustrate a phased plan or process without using SVG or Mermaid JS. CONFIRMS NO SVG/MERMAID.
+        7. Measuring What Matters (KPIs): Radar Chart (Chart.js/Canvas). Goal: Compare/Relationship. Shows multi-faceted success metrics and interrelations. USES CANVAS.
+        8. Proposed Investment: HTML/CSS Text Card. Goal: Inform. Clear display of cost structure.
+        9. Terms & Conditions: HTML/CSS List Card. Goal: Inform. Clear display of legal terms.
+        10. Call to Action: HTML/CSS Text. Goal: Inform.
+        
+        NO SVG / NO MERMAID JS Confirmation: This output explicitly confirms that NEITHER Mermaid JS NOR SVG were used. All charts are rendered on <canvas> elements by Chart.js, and diagrams like the timeline are constructed with pure HTML and Tailwind CSS.
+    -->
+
+    <!-- Slide 1: Title -->
+    <section
+      id="title-slide"
+      class="section-container bg-gradient-to-br from-[#003f5c] to-[#665191] text-white"
+    >
+      <h1 class="section-title">Digital Growth Blueprint</h1>
+      <p class="section-subtitle">
+        A Tailored Strategy for Your Yarn Company in Surat
+      </p>
+      <p class="text-xl md:text-2xl font-light mt-8">
+        Presented by <span class="font-semibold">Shree Art Studios</span>
+      </p>
+    </section>
+
+    <!-- Slide 2: Executive Summary -->
+    <section
+      id="executive-summary"
+      class="section-container bg-gray-50 text-gray-800"
+    >
+      <h2 class="section-title text-[#003f5c]">Executive Summary</h2>
+      <p class="section-subtitle">
+        Shree Art Studios partners with your yarn company to establish a robust
+        digital presence, boost visibility, drive sales, and foster strong
+        community engagement among weavers, circular knitting customers, and
+        traders. Our data-driven approach positions you as a market leader.
+      </p>
+      <div class="mt-8 text-xl text-gray-600 max-w-2xl">
+        <p>
+          We combine strategic online presence with targeted lead generation and
+          consistent content delivery to achieve measurable growth and build
+          lasting brand loyalty in the competitive yarn market.
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 3: Target Audience -->
+    <section
+      id="target-audience"
+      class="section-container bg-white text-gray-800"
+    >
+      <h2 class="section-title text-[#d45087]">
+        Understanding Your Core Market
+      </h2>
+      <p class="section-subtitle">
+        Our strategy focuses on connecting with the right segments to drive both
+        bulk orders and brand loyalty.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full max-w-4xl">
+        <div class="card bg-gray-50 border-t-4 border-[#665191] p-6">
+          <div class="text-7xl mb-4">🏭</div>
+          <h3 class="text-2xl font-bold mb-2" style="color: #665191">
+            Weavers & Mills
+          </h3>
+          <p class="text-gray-600">
+            Targeting textile manufacturers and professional weavers in Surat
+            and beyond.
+          </p>
+        </div>
+        <div class="card bg-gray-50 border-t-4 border-[#d45087] p-6">
+          <div class="text-7xl mb-4">🪡</div>
+          <h3 class="text-2xl font-bold mb-2" style="color: #d45087">
+            Circular Knitting Customers
+          </h3>
+          <p class="text-gray-600">
+            Engaging businesses and manufacturers utilizing circular knitting
+            processes.
+          </p>
+        </div>
+        <div class="card bg-gray-50 border-t-4 border-[#ff7c43] p-6">
+          <div class="text-7xl mb-4">📈</div>
+          <h3 class="text-2xl font-bold mb-2" style="color: #ff7c43">
+            Traders & Wholesalers
+          </h3>
+          <p class="text-gray-600">
+            Building relationships with distributors and retailers for bulk
+            supply.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Strategic Objectives -->
+    <section
+      id="strategic-objectives"
+      class="section-container bg-gray-100 text-gray-800"
+    >
+      <h2 class="section-title text-[#ffa600]">Our Strategic Objectives</h2>
+      <p class="section-subtitle">
+        Clear, measurable goals ensuring our efforts translate into tangible
+        business growth.
+      </p>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 w-full max-w-6xl"
+      >
+        <div class="card bg-gray-50 border-b-4 border-[#665191]">
+          <h3 class="text-xl font-bold mb-4" style="color: #665191">
+            Brand Awareness
+          </h3>
+          <div class="chart-container w-48 h-48 mx-auto">
+            <canvas id="awarenessChart"></canvas>
+          </div>
+          <p class="text-gray-600 mt-4 text-lg">
+            Increase online awareness by
+            <span class="font-bold text-xl">25%</span> in 9 months.
+          </p>
+        </div>
+        <div class="card bg-gray-50 border-b-4 border-[#ff7c43]">
+          <h3 class="text-xl font-bold mb-4" style="color: #ff7c43">
+            Social Engagement
+          </h3>
+          <div class="chart-container w-48 h-48 mx-auto">
+            <canvas id="engagementChart"></canvas>
+          </div>
+          <p class="text-gray-600 mt-4 text-lg">
+            Grow engagement by <span class="font-bold text-xl">30%</span> across
+            platforms.
+          </p>
+        </div>
+        <div
+          class="card bg-gray-50 border-b-4 border-[#003f5c] flex flex-col justify-center items-center"
+        >
+          <h3 class="text-xl font-bold mb-4" style="color: #003f5c">
+            B2B Lead Generation
+          </h3>
+          <div class="text-8xl font-black my-4 text-[#003f5c]">15</div>
+          <p class="text-gray-600 text-lg">
+            Qualified B2B leads per month from traders and weavers.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Monthly Content Engine -->
+    <section
+      id="content-engine"
+      class="section-container bg-white text-gray-800"
+    >
+      <h2 class="section-title text-[#665191]">The Monthly Content Engine</h2>
+      <p class="section-subtitle">
+        A strategic mix of 18 creatives designed to engage, inform, and inspire
+        your target segments.
+      </p>
+      <div class="card w-full max-w-3xl mt-12">
+        <div class="chart-container h-72 md:h-80">
+          <canvas id="contentMixChart"></canvas>
+        </div>
+        <p class="text-gray-600 mt-6 text-lg">
+          Consistent output keeps your brand top-of-mind and fuels all marketing
+          channels.
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 6: 6-Month Growth Roadmap -->
+    <section id="roadmap" class="section-container bg-gray-100 text-gray-800">
+      <h2 class="section-title text-[#d45087]">6-Month Growth Roadmap</h2>
+      <p class="section-subtitle">
+        Our phased approach ensures systematic and effective implementation of
+        your digital marketing strategy.
+      </p>
+      <div class="timeline-container mt-12 w-full">
+        <div class="timeline-item clearfix">
+          <div class="timeline-dot" style="background-color: #665191"></div>
+          <div class="timeline-content card">
+            <h3 class="text-xl font-bold mb-2" style="color: #665191">
+              Months 1-2: Foundation & Strategy
+            </h3>
+            <p class="text-gray-600 text-base">
+              Full website audit, in-depth keyword research for weavers,
+              circular knitting customers, and traders. Analytics setup, core
+              content strategy finalization, and social media profile
+              optimization.
+            </p>
+          </div>
+        </div>
+        <div class="timeline-item clearfix">
+          <div class="timeline-dot" style="background-color: #d45087"></div>
+          <div class="timeline-content card">
+            <h3 class="text-xl font-bold mb-2" style="color: #d45087">
+              Months 3-4: Launch & Activation
+            </h3>
+            <p class="text-gray-600 text-base">
+              Launch initial SEO campaigns, roll out targeted Google and Social
+              Media ads. Implement content calendar and develop email nurturing
+              sequences.
+            </p>
+          </div>
+        </div>
+        <div class="timeline-item clearfix">
+          <div class="timeline-dot" style="background-color: #ff7c43"></div>
+          <div class="timeline-content card">
+            <h3 class="text-xl font-bold mb-2" style="color: #ff7c43">
+              Months 5-6: Optimization & Scale
+            </h3>
+            <p class="text-gray-600 text-base">
+              Refine ad campaigns based on performance data for maximum ROI.
+              Scale content production with more video and explore
+              collaborations relevant to circular knitting and textile
+              manufacturing.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Measuring What Matters -->
+    <section id="kpis" class="section-container bg-white text-gray-800">
+      <h2 class="section-title text-[#ff7c43]">Measuring What Matters</h2>
+      <p class="section-subtitle">
+        We track a balanced set of Key Performance Indicators (KPIs) for a
+        holistic view, enabling continuous optimization.
+      </p>
+      <div class="card w-full max-w-3xl mt-12">
+        <div class="chart-container h-80 md:h-96">
+          <canvas id="kpiRadarChart"></canvas>
+        </div>
+        <p class="text-gray-600 mt-6 text-lg">
+          Our data-driven approach ensures informed decisions and better results
+          across all channels.
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 8: Proposed Investment -->
+    <section id="investment" class="section-container bg-gray-50 text-gray-800">
+      <h2 class="section-title text-[#ffa600]">Proposed Investment</h2>
+      <p class="section-subtitle">
+        Transparent and flexible pricing designed to deliver maximum value.
+      </p>
+      <div
+        class="card bg-gray-50 border-l-4 border-[#003f5c] p-8 mt-12 w-full max-w-xl"
+      >
+        <h3 class="text-3xl font-bold mb-4" style="color: #003f5c">
+          Monthly Engagement
+        </h3>
+        <p class="text-2xl font-semibold mb-2 text-gray-700">
+          Social Media Marketing:
+        </p>
+        <p class="text-4xl font-black mb-6 text-[#665191]">
+          Rs 50,000 Per Month + taxes
+        </p>
+        <p class="text-2xl font-semibold mb-2 text-gray-700">
+          Charges for Ad Campaign:
+        </p>
+        <p class="text-4xl font-black text-[#d45087]">10% of Ad Budget</p>
+        <p class="text-sm text-gray-500 mt-6 italic">
+          Note: Specific costs will be detailed in a final proposal after a
+          detailed consultation.
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 9: Terms & Conditions -->
+    <section id="terms" class="section-container bg-white text-gray-800">
+      <h2 class="section-title text-[#665191]">Terms & Conditions</h2>
+      <p class="section-subtitle">
+        Key operational agreements for a smooth collaboration.
+      </p>
+      <div class="card w-full max-w-2xl mt-12 text-left">
+        <ul class="list-disc list-inside text-lg space-y-3 text-gray-700">
+          <li>Monthly payment should be made in advance.</li>
+          <li>
+            All Login credentials must be provided via client well in advance.
+          </li>
+          <li>
+            The client will provide the required resources timely to help the
+            project.
+          </li>
+          <li>
+            This proposal is valid for 10 days from the date of the proposal.
+          </li>
+          <li>Monthly payments are non-refundable.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 10: Call to Action -->
+    <section
+      id="call-to-action"
+      class="section-container bg-gradient-to-br from-[#665191] to-[#003f5c] text-white"
+    >
+      <h2 class="section-title">Ready to Weave Your Success Story?</h2>
+      <p class="section-subtitle">
+        Let's partner to elevate your brand in the digital marketplace.
+      </p>
+      <div class="mt-12">
+        <a
+          href="#"
+          class="bg-[#ff7c43] hover:bg-[#ffa600] text-gray-900 font-bold py-4 px-10 rounded-full text-xl transition-colors shadow-lg"
+          >Contact Shree Art Studios Today</a
+        >
+      </div>
+      <p class="mt-8 text-xl font-light">
+        Best Regards, <span class="font-semibold">Team Shree Art Studios</span>
+      </p>
+    </section>
+
+    <script>
+      const tooltipTitleCallback = (tooltipItems) => {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        if (Array.isArray(label)) {
+          return label.join(" ");
+        }
+        return label;
+      };
+
+      const wrapLabel = (label, maxLength = 16) => {
+        if (typeof label !== "string" || label.length <= maxLength) {
+          return label;
+        }
+        const words = label.split(" ");
+        const lines = [];
+        let currentLine = "";
+        words.forEach((word) => {
+          if (
+            (currentLine + " " + word).trim().length > maxLength &&
+            currentLine !== ""
+          ) {
+            lines.push(currentLine.trim());
+            currentLine = word;
+          } else {
+            currentLine = (currentLine + " " + word).trim();
+          }
+        });
+        lines.push(currentLine.trim());
+        return lines;
+      };
+
+      const brilliantBluesPalette = [
+        "#665191",
+        "#d45087",
+        "#ff7c43",
+        "#ffa600",
+        "#003f5c",
+      ];
+
+      // Donut Charts for Objectives
+      const createDonutChart = (ctx, label, data, color) => {
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: [label, ""],
+            datasets: [
+              {
+                data: data,
+                backgroundColor: [color, "#e5e7eb"],
+                borderColor: ["#ffffff"],
+                borderWidth: 2,
+                cutout: "75%",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: false },
+            },
+          },
+        });
+      };
+
+      const awarenessCtx = document
+        .getElementById("awarenessChart")
+        .getContext("2d");
+      createDonutChart(
+        awarenessCtx,
+        "Awareness",
+        [25, 75],
+        brilliantBluesPalette[0]
+      );
+
+      const engagementCtx = document
+        .getElementById("engagementChart")
+        .getContext("2d");
+      createDonutChart(
+        engagementCtx,
+        "Engagement",
+        [30, 70],
+        brilliantBluesPalette[2]
+      );
+
+      // Bar Chart for Content Mix
+      const contentMixCtx = document
+        .getElementById("contentMixChart")
+        .getContext("2d");
+      new Chart(contentMixCtx, {
+        type: "bar",
+        data: {
+          labels: ["Static Posts", "Reels (Video)", "Stories"].map((label) =>
+            wrapLabel(label)
+          ),
+          datasets: [
+            {
+              label: "Monthly Creatives",
+              data: [10, 4, 4],
+              backgroundColor: brilliantBluesPalette.slice(0, 3), // Use first three colors
+              borderRadius: 6,
+            },
+          ],
+        },
+        options: {
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: "Monthly Content Distribution (18 Total Creatives)",
+              font: { size: 18, weight: "bold" },
+              color: "#374151",
+              padding: { bottom: 20 },
+            },
+            tooltip: {
+              callbacks: { title: tooltipTitleCallback },
+            },
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              grid: { display: false },
+              ticks: { font: { size: 14 } },
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 14 } },
+            },
+          },
+        },
+      });
+
+      // Radar Chart for KPIs
+      const kpiRadarCtx = document
+        .getElementById("kpiRadarChart")
+        .getContext("2d");
+      const kpiLabels = [
+        "Website Performance",
+        "SEO Performance",
+        "Social Media Engagement",
+        "Paid Ad Performance (ROAS)",
+        "Email Marketing Effectiveness",
+        "B2B Lead Generation",
+      ].map((label) => wrapLabel(label));
+
+      new Chart(kpiRadarCtx, {
+        type: "radar",
+        data: {
+          labels: kpiLabels,
+          datasets: [
+            {
+              label: "Focus Area",
+              data: [8, 9, 8, 7, 6, 9], // Example data for visualization
+              backgroundColor: "rgba(102, 81, 145, 0.2)", // brilliantBluesPalette[0] with transparency
+              borderColor: "rgba(102, 81, 145, 1)",
+              borderWidth: 2,
+              pointBackgroundColor: "rgba(102, 81, 145, 1)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgba(102, 81, 145, 1)",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                title: tooltipTitleCallback,
+              },
+            },
+          },
+          scales: {
+            r: {
+              angleLines: { color: "#d1d5db" },
+              grid: { color: "#e5e7eb" },
+              pointLabels: {
+                font: { size: 14, weight: "bold" },
+                color: "#4b5563",
+              },
+              ticks: {
+                display: false,
+                stepSize: 2,
+              },
+              min: 0,
+              max: 10,
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
